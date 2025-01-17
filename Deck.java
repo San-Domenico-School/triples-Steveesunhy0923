@@ -41,13 +41,7 @@ public class Deck
     
     public Card getShuffledCard(int index)
     {
-        if (index > 0 && index <= shuffledDeck.size()) 
-        {
-            return shuffledDeck.get(index - 1); 
-        } else 
-        {
-            return null; 
-        }
+        return shuffledDeck.get(index);
     }
     
     public ArrayList<Card> getShuffledDeck()
