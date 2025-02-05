@@ -13,8 +13,19 @@ public class GameBoard extends World
     public GameBoard()
     {   
         super(430, 600, 1, false); 
-        new Tester(NUM_CARDS_IN_DECK);
+        prepareScene();
+        //new Tester(NUM_CARDS_IN_DECK);
     }
+    private void prepareScene()
+    {
+        // Create a Dealer passing in the total number of cards to use
+        Dealer dealer = new Dealer(NUM_CARDS_IN_DECK);
 
+        // Add the Dealer to the world at an offscreen location (-30, -30) 
+        // so it doesn't appear on the board
+        addObject(dealer, -30, -30);
+
+        // You may add other setup code here, if needed.
+    }
 
 }

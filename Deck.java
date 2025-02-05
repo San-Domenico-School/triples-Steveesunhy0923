@@ -49,7 +49,7 @@ public class Deck
         return shuffledDeck;
     }
     
-    public int limitNumCardsInDeck(int limit) 
+    private int limitNumCardsInDeck(int limit) 
     {
         return (limit <= 27) ? 27 : 81;
     }
