@@ -1,9 +1,12 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;
 import java.util.ArrayList;
+
 /**
  * steve sun
- * jan 26
+ * feb 3
  */
+
+
 public class Dealer extends Actor
 {
     private Deck deck;
@@ -12,30 +15,27 @@ public class Dealer extends Actor
     private Card[] cardsSelected;
     private int numCardsInDeck;
     private int triplesRemaining;
-    private boolean shapeFactor;
-    private boolean colorFactor;
-    private boolean numberOfShapesFactor;
-    private boolean shadingFactor;
-    public Dealer(int numCardsInDeck) 
+
+    public Dealer(int numCardsInDeck)
     {
         this.numCardsInDeck = numCardsInDeck;
-        this.triplesRemaining = numCardsInDeck / 3;
-        this.deck = new Deck(numCardsInDeck);
-        this.cardsSelected = new Card[3];
+        triplesRemaining = numCardsInDeck / 3;
+        deck = new Deck(numCardsInDeck);
+        cardsSelected = new Card[3];
+        cardsOnBoard = new ArrayList<Card>();
+        selectedCardsIndex = new ArrayList<Integer>();
     }
-    
-    public void addedToWorld(World world) 
+
+    public void addedToWorld(World w)
     {
         dealBoard();
         setUI();
     }
 
-    // Task 6 - Implement dealBoard
-    public void dealBoard() 
+    public void dealBoard()
     {
         Greenfoot.playSound("shuffle.wav");
-        deck.createShuffledDeck();
-        for (int i = 0; i < 5; i++)
+         for (int i = 0; i < 5; i++)
         {
             for (int j = 0; j < 3; j++)
             {
@@ -43,131 +43,93 @@ public class Dealer extends Actor
                 getWorld().addObject(card, 130*j+80, 90*i+50);
             }
         }
+
     }
 
-    
-    public void setUI() 
+    public void setUI()
     {
-        int cardsRemaining = deck.getNumCardsInDeck(); 
-        Scorekeeper lol = new Scorekeeper();
-        Integer score = lol.getScore();
-        getWorld().showText("" + cardsRemaining, 314, 469);
-        getWorld().showText("" + score, 314, 505);
+        Integer d = deck.getNumCardsInDeck();
+        Integer s = Scorekeeper.getScore();
+        getWorld().showText(d.toString(), 700, 100);
+        getWorld().showText(s.toString(), 700, 150);
     }
 
-    
-    public void endGame() 
+    public void endGame()
     {
-        Greenfoot.stop();
+        if(triplesRemaining <= 0)
+        {
+            Greenfoot.stop();
+        }
     }
 
-    public void checkIfTriple(Card[] cardsSelected) 
+    public void checkIfTriple(Card[] cards)
     {
-        this.cardsSelected = cardsSelected;
-        checkShape(cardsSelected);
-        checkColor(cardsSelected);
-        checkNumberOfShapes(cardsSelected);
-        checkShading(cardsSelected);
-        if (shapeFactor && colorFactor && numberOfShapesFactor
-            && shadingFactor)
+        if(isTriple(cards))
         {
             actionIfTriple();
-            System.out.print("triple found");
-        }
-    }
-    
-    public boolean checkShape(Card[] cardsSelected)
-    {
-        if (cardsSelected[0].getShape() == cardsSelected[1].getShape() 
-            && cardsSelected[0].getShape() == cardsSelected[2].getShape() )
-        {
-            shapeFactor = true;
-        }
-        else if (cardsSelected[0].getShape() != cardsSelected[1].getShape() 
-            && cardsSelected[0].getShape() != cardsSelected[2].getShape() 
-            && cardsSelected[1].getShape() != cardsSelected[2].getShape())
-        {
-            shapeFactor = true;
         }
         else
         {
-            shapeFactor = false;
+            Animations.wobble(cardsSelected);
         }
-        return shapeFactor;
-    }
-    
-    public boolean checkColor(Card[] cardsSelected)
-    {
-        if (cardsSelected[0].getColor() == cardsSelected[1].getColor() 
-            && cardsSelected[0].getColor() == cardsSelected[2].getColor() )
-        {
-            colorFactor = true;
-        }
-        else if (cardsSelected[0].getColor() != cardsSelected[1].getColor() 
-            && cardsSelected[0].getColor() != cardsSelected[2].getColor() 
-            && cardsSelected[1].getColor() != cardsSelected[2].getColor())
-        {
-            colorFactor = true;
-        }
-        else
-        {
-            colorFactor = false;
-        }
-        return colorFactor;
-    }
-    
-    public boolean checkNumberOfShapes(Card[] cardsSelected)
-    {
-        if (cardsSelected[0].getNumberOfShapes() == cardsSelected[1].getNumberOfShapes() 
-            && cardsSelected[0].getNumberOfShapes() == cardsSelected[2].getNumberOfShapes() )
-        {
-            numberOfShapesFactor = true;
-        }
-        else if (cardsSelected[0].getNumberOfShapes() != cardsSelected[1].getNumberOfShapes() 
-            && cardsSelected[0].getNumberOfShapes() != cardsSelected[2].getNumberOfShapes() 
-            && cardsSelected[1].getNumberOfShapes() != cardsSelected[2].getNumberOfShapes())
-        {
-            numberOfShapesFactor = true;
-        }
-        else
-        {
-            numberOfShapesFactor = false;
-        }
-        return numberOfShapesFactor;
     }
 
-    public boolean checkShading(Card[] cardsSelected)
+    public void actionIfTriple()
     {
-        if (cardsSelected[0].getShading() == cardsSelected[1].getShading() 
-            && cardsSelected[0].getShading() == cardsSelected[2].getShading() )
+        int[][] coords = new int[3][2];
+        for(int i = 0; i < 3; i++)
         {
-            shadingFactor = true;
+            coords[i][0] = cardsSelected[i].getX();
+            coords[i][1] = cardsSelected[i].getY();
         }
-        else if (cardsSelected[0].getShading() != cardsSelected[1].getShading() 
-            && cardsSelected[0].getShading() != cardsSelected[2].getShading() 
-            && cardsSelected[1].getShading() != cardsSelected[2].getShading())
+        Animations.slideAndTurn(cardsSelected);
+        for(int i = 0; i < 3; i++)
         {
-            shadingFactor = true;
+            getWorld().removeObject(cardsSelected[i]);
+            cardsOnBoard.remove(cardsSelected[i]);
         }
-        else
+        for(int i = 0; i < 3; i++)
         {
-            shadingFactor = false;
+            if(deck.getNumCardsInDeck() > 0)
+            {
+                Card c = deck.getTopCard();
+                cardsOnBoard.add(c);
+                getWorld().addObject(c, coords[i][0], coords[i][1]);
+            }
         }
-        return shadingFactor;
+        triplesRemaining--;
+        Scorekeeper.updateScore();
+        setUI();
+        endGame();
     }
 
-    
-    public void actionIfTriple() {
-        // Logic for actions if a triple is found
+    public void setCardsSelected(ArrayList<Card> board, ArrayList<Integer> idx, Card[] sel)
+    {
+        cardsOnBoard = board;
+        selectedCardsIndex = idx;
+        cardsSelected = sel;
     }
 
-    public void setCardsSelected(ArrayList<Card> selectedCards, ArrayList<Integer> selectedIndexes, Card[] selectedArray) {
-        this.cardsOnBoard = selectedCards;
-        this.selectedCardsIndex = selectedIndexes;
-        this.cardsSelected = selectedArray;
+    private boolean isTriple(Card[] sel)
+    {
+        if(sel[0] == null || sel[1] == null || sel[2] == null) return false;
+        if(!featureCheck(sel[0].getShape(), sel[1].getShape(), sel[2].getShape())) return false;
+        if(!featureCheck(sel[0].getColor(), sel[1].getColor(), sel[2].getColor())) return false;
+        if(!featureCheck(sel[0].getNumberOfShapes(), sel[1].getNumberOfShapes(), sel[2].getNumberOfShapes())) return false;
+        if(!featureCheck(sel[0].getShading(), sel[1].getShading(), sel[2].getShading())) return false;
+        return true;
+    }
+
+    private boolean featureCheck(Object a, Object b, Object c)
+    {
+        return (a.equals(b) && b.equals(c)) || (!a.equals(b) && !b.equals(c) && !a.equals(c));
     }
     
+
 }
+
+
+
 
 
 

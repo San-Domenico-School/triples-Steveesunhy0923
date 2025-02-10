@@ -1,14 +1,13 @@
 import greenfoot.*; 
-
 /**
  * Game Board for Triples
  * Steve Sun 2024
  * ...
  */
 
+
 public class Card extends Actor
-{   
-    
+{
     public enum Color 
     {
         RED, BLUE, GREEN, NO_COLOR;
@@ -34,8 +33,7 @@ public class Card extends Actor
         this.shading = shading;
         this.cardImage = cardImage;
         this.selectedCardImage = selectedCardImage;
-        
-        
+
         setImage(cardImage);
     }
 

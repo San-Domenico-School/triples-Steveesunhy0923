@@ -1,45 +1,28 @@
+
 /**
  * Write a description of class Scorekeeper here.
  * 
  * @author (Steve Sun) 
  * @version (a version number or a date)
  */
-public class Scorekeeper extends Animations
+public class Scorekeeper
 {
-    private int deckSize;
-    private int score;
-    private long startTime;
+    private static int deckSize;
+    private static int score;
+    private static long startTime = System.currentTimeMillis();
 
-    /**
-     * Constructor for objects of class Scorekeeper
-     */
-    public Scorekeeper()
+    public static void setDeckSize(int s)
     {
-        this.startTime = System.currentTimeMillis();
+        deckSize = s;
     }
-    
-    public void setDeckSize(int input)
+
+    public static void updateScore()
     {
-        this.deckSize = input;
+        score += 10;
     }
-    
-    public void updateScore()
-    {   
-        long currentTime = System.currentTimeMillis();
-        long elapsedTime = (currentTime - startTime) / 1000;
-        int timeBonus = Math.max(1, 100 - (int) elapsedTime);
-        int deckBonus = deckSize * 10; 
-        this.score += timeBonus + deckBonus;
-        this.startTime = currentTime; 
-    }
-    
-    public int getScore()
+
+    public static int getScore()
     {
-        return this.score;
-    }
-    
-    public void act()
-    {
-        
+        return score;
     }
 }
