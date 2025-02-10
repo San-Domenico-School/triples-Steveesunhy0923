@@ -22,14 +22,12 @@ public class GameBoard extends World
         // Create a Dealer passing in the total number of cards to use
         Dealer dealer = new Dealer(NUM_CARDS_IN_DECK);
         Player player = new Player(dealer);
-        Scorekeeper scorekeeper = new Scorekeeper();
+        
         // Add the Dealer to the world at an offscreen location (-30, -30) 
         // so it doesn't appear on the board
         addObject(dealer, -30, -30);
         addObject(player, -100, 100);
-        
-        
-        
+        // showText(String.valueOf(scorekeeper.getScore()), 310, 505);
         // You may add other setup code here, if needed.
     }
 

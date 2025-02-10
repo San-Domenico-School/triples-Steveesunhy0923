@@ -50,8 +50,8 @@ public class Dealer extends Actor
     {
         Integer d = deck.getNumCardsInDeck();
         Integer s = Scorekeeper.getScore();
-        getWorld().showText(d.toString(), 700, 100);
-        getWorld().showText(s.toString(), 700, 150);
+        getWorld().showText(d.toString(), 310, 470);
+        getWorld().showText(s.toString(), 310, 505);
     }
 
     public void endGame()
